@@ -1,0 +1,20 @@
+<resources>
+
+    <string name="back4app_server_url">https://parseapi.back4app.com/</string>
+
+    <!-- Change the following strings as required -->
+    <string name="back4app_app_id">a9jP0xx2JLCQRCeCnCC8c996NbEr156i424R6UdX</string>
+    <string name="back4app_client_key">3qBEyssN5dvXlP741Lc1PghDYMUsEeKtGjCFgmDl</string>
+
+    <string name="app_name">HalfNHalf</string>
+    <string name="title_activity_home">Home</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle"><java>MainActivity.getUsername()</java></string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_home_main">HomeMain</string>
+    <string name="title_activity_maps_test">Map</string>
+
+</resources>

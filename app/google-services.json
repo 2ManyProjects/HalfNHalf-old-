@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "463490438039",
+    "firebase_url": "https://halfnhalf-72d46.firebaseio.com",
+    "project_id": "halfnhalf-72d46",
+    "storage_bucket": "halfnhalf-72d46.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:463490438039:android:78d08d7f0050a405",
+        "android_client_info": {
+          "package_name": "com.back4app.HalfNHalf"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "463490438039-rse3vbpjs06vk71fmsfd1geoj9rup1mj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.back4app.HalfNHalf",
+            "certificate_hash": "2675bfb8acf9b39951cb7331006f676c54fa97d7"
+          }
+        },
+        {
+          "client_id": "463490438039-6sllatljbqd492rbp5q8l3j3sqku4oq2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8LWpy8FgtPdh36ezIN18jMWdMzbCL18I"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "463490438039-6sllatljbqd492rbp5q8l3j3sqku4oq2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
