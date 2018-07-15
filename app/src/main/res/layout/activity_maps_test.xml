@@ -1,43 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
 
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent">
+
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp"
+        tools:context=".MapsTest" />
+
+    <Button
+        android:id="@+id/B_search"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/TF_location"
+        android:background="@drawable/places_ic_search"
+        android:onClick="onClick"
+        android:visibility="visible" />
 
     <EditText
         android:id="@+id/TF_location"
         android:layout_width="290dp"
         android:layout_height="45dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="37dp"
         android:ems="10"
+        android:hint="Search Store"
         android:inputType="textPersonName"
-        android:text="Name"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true" />
-
-    <Button
-        android:id="@+id/B_search"
-        android:layout_width="100dp"
-        android:layout_height="45dp"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/TF_location"
-        android:onClick="onClick"
-        android:text="Search"
-        android:layout_toRightOf="@+id/TF_location" />
-
-
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:map="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".MapsTest"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true" />
+        android:selectAllOnFocus="false"
+        android:singleLine="false"
+        android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Subtitle"
+        android:visibility="visible" />
 
 
 </RelativeLayout>

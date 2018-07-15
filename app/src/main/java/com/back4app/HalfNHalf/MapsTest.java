@@ -1,11 +1,16 @@
 package com.back4app.HalfNHalf;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.LocationListener;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.view.ViewDebug;
+import android.widget.Button;
 import android.widget.Toast;
 import android.Manifest;
 import android.location.Address;
@@ -44,7 +49,7 @@ import java.util.List;
 
 public class MapsTest extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnPoiClickListener, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener{
+        GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
 
     private GoogleMap mMap;
     private GoogleApiClient client;
@@ -73,6 +78,89 @@ public class MapsTest extends FragmentActivity implements OnMapReadyCallback,
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        /*Button Search = (Button) findViewById(R.id.B_search);
+        Search.setOnClickListener(new View.OnClickListener() {
+            @Override
+
+            public void onClick(View v)
+            {
+                Object dataTransfer[] = new Object[2];
+                GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
+
+                EditText tf_location =  findViewById(R.id.TF_location);
+                String location = tf_location.getText().toString();
+                List<Address> addressList;
+                Geocoder geocoder = new Geocoder(getBaseContext());
+
+                try {
+                    addressList = geocoder.getFromLocationName(location, 5);
+
+                    if(addressList != null)
+                    {
+                        alertDisplayer("LOCATION", location);
+                        //String.valueOf(addressList.size())
+                        for(int i = 0;i<addressList.size();i++)
+                        {
+                            alertDisplayer("for", String.valueOf(i));
+                            LatLng latLng = new LatLng(addressList.get(i).getLatitude() , addressList.get(i).getLongitude());
+                            MarkerOptions markerOptions = new MarkerOptions();
+                            markerOptions.position(latLng);
+                            markerOptions.title(location);
+                            mMap.addMarker(markerOptions);
+                            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                            mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Snackbar.make(v, "Some Error while Searching", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            }
+        });*/
+    }
+
+    public void onClick(View v)
+    {
+        Object dataTransfer[] = new Object[2];
+        GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
+
+        EditText tf_location =  findViewById(R.id.TF_location);
+        String location = tf_location.getText().toString();
+        List<Address> addressList;
+        Geocoder geocoder = new Geocoder(getBaseContext());
+
+        try {
+            addressList = geocoder.getFromLocationName(location, 5);
+
+            if(addressList != null)
+            {
+                alertDisplayer("LOCATION", location);
+                //String.valueOf(addressList.size())
+                for(int i = 0;i<addressList.size();i++)
+                {
+                    alertDisplayer("for", String.valueOf(i));
+                    LatLng latLng = new LatLng(addressList.get(i).getLatitude() , addressList.get(i).getLongitude());
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(latLng);
+                    markerOptions.title(location);
+                    mMap.addMarker(markerOptions);
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            Snackbar.make(v, "Some Error while Searching", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        }/*
+        mMap.clear();
+        String url = getUrl(latitude, longitude, location);
+        dataTransfer[0] = mMap;
+        dataTransfer[1] = url;
+
+        getNearbyPlacesData.execute(dataTransfer);
+        Toast.makeText(MapsTest.this, "Showing Nearby stuff", Toast.LENGTH_SHORT).show();*/
     }
 
     @Override
@@ -131,14 +219,16 @@ public class MapsTest extends FragmentActivity implements OnMapReadyCallback,
         }
     }
 
-    private boolean checkLocationPermission() {
-        return false;
-    }
-
 
     @Override
-    public void onMapReady(GoogleMap map) {
-        map.setOnPoiClickListener(this);
+    public void onMapReady(GoogleMap googleMap) {
+       // map.setOnPoiClickListener(this);
+        mMap = googleMap;
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            buildGoogleApiClient();
+            mMap.setMyLocationEnabled(true);
+        }
     }
 
     @Override
@@ -150,45 +240,7 @@ public class MapsTest extends FragmentActivity implements OnMapReadyCallback,
                 Toast.LENGTH_SHORT).show();
     }
 
-    public void onClick(View v)
-    {
-        Object dataTransfer[] = new Object[2];
-        GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
 
-        if(v.getId() == R.id.B_search)
-        {
-            EditText tf_location =  findViewById(R.id.TF_location);
-            String location = tf_location.getText().toString();
-            List<Address> addressList;
-
-
-            if(!location.equals(""))
-            {
-                Geocoder geocoder = new Geocoder(this);
-
-                try {
-                    addressList = geocoder.getFromLocationName(location, 5);
-
-                    if(addressList != null)
-                    {
-                        for(int i = 0;i<addressList.size();i++)
-                        {
-                            LatLng latLng = new LatLng(addressList.get(i).getLatitude() , addressList.get(i).getLongitude());
-                            MarkerOptions markerOptions = new MarkerOptions();
-                            markerOptions.position(latLng);
-                            markerOptions.title(location);
-                            mMap.addMarker(markerOptions);
-                            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                            mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
-                        }
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
-    }
 
 
     private String getUrl(double latitude , double longitude , String nearbyPlace)
@@ -199,7 +251,7 @@ public class MapsTest extends FragmentActivity implements OnMapReadyCallback,
         googlePlaceUrl.append("&radius="+PROXIMITY_RADIUS);
         googlePlaceUrl.append("&type="+nearbyPlace);
         googlePlaceUrl.append("&sensor=true");
-        googlePlaceUrl.append("&key="+"AIzaSyBLEPBRfw7sMb73Mr88L91Jqh3tuE4mKsE");
+        googlePlaceUrl.append("&key="+"AIzaSyDe6X5nfHKIe-Wbg9QlpQW1UQXQEnEUTmQ");
 
         Log.d("MapsActivity", "url = "+googlePlaceUrl.toString());
 
@@ -207,9 +259,39 @@ public class MapsTest extends FragmentActivity implements OnMapReadyCallback,
     }
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(100);
+        locationRequest.setFastestInterval(1000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
+
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED)
+        {
+            LocationServices.FusedLocationApi.requestLocationUpdates(client, locationRequest, this);
+        }
     }
 
+
+
+    public boolean checkLocationPermission()
+    {
+        if(ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION)  != PackageManager.PERMISSION_GRANTED )
+        {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.ACCESS_FINE_LOCATION))
+            {
+                ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.ACCESS_FINE_LOCATION },REQUEST_LOCATION_CODE);
+            }
+            else
+            {
+                ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.ACCESS_FINE_LOCATION },REQUEST_LOCATION_CODE);
+            }
+            return false;
+
+        }
+        else
+            return true;
+    }
     @Override
     public void onConnectionSuspended(int i) {
 
@@ -220,18 +302,18 @@ public class MapsTest extends FragmentActivity implements OnMapReadyCallback,
 
     }
 
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
 
-    }
-
-    @Override
-    public void onProviderEnabled(String s) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String s) {
-
+    void alertDisplayer(String title, String message){
+        AlertDialog.Builder builder = new AlertDialog.Builder(MapsTest.this)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog ok = builder.create();
+        ok.show();
     }
 }
