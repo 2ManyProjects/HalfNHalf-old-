@@ -44,8 +44,6 @@ public class RegisterUser extends Activity {
     private EditText username, password;
     private AutoCompleteTextView email;
 
-
-
     ProgressDialog progressDialog;
     final List<String> permissions = Arrays.asList("public_profile", "email");
 
@@ -159,6 +157,9 @@ public class RegisterUser extends Activity {
             focusView.requestFocus();
         } else {
             ParseUser user = new ParseUser();
+            Profile profile = new Profile();
+            profile.setEmail(emailstr);
+            profile.setUsername(usernamestr);
             user.setUsername(usernamestr);
             user.setPassword(passwordstr);
             user.setEmail(emailstr);

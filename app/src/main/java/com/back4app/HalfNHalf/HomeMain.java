@@ -1,9 +1,13 @@
 package com.back4app.HalfNHalf;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -15,6 +19,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
+import java.util.List;
 
 public class HomeMain extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -32,8 +43,9 @@ public class HomeMain extends AppCompatActivity
             public void onClick(View view) {
 
                 launchActivity("MapTest");
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                //serverQuery();
+                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();*/
             }
         });
 
@@ -46,6 +58,32 @@ public class HomeMain extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+    }
+
+    private void serverQuery()
+    {
+        ParseQuery<Profile> query = ParseQuery.getQuery(Profile.class);
+        query.orderByAscending("createdAt");
+        query.findInBackground(new FindCallback<Profile>() {
+            @Override
+            public void done(List<Profile> list, @Nullable ParseException e) {
+                if (e == null){
+                    alertDisplayer("", "");
+                }else if(checkConnection()){
+                    alertDisplayer("Error", "Network issues :P");
+                }
+            }
+        });
+    }
+
+    public boolean checkConnection(){   //method for checking network connection
+        ConnectivityManager cm =
+                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        return isConnected;
     }
 
     @Override
