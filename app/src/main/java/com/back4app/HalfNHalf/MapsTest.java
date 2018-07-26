@@ -130,6 +130,63 @@ public class MapsTest extends FragmentActivity implements OnMapReadyCallback,
         List<Address> addressList;
         Geocoder geocoder = new Geocoder(getBaseContext());
 
+
+        if(!location.equals("")) {
+            switch (location) {
+                case "h":
+                    mMap.clear();
+                    String hospital = "hospital";
+                    String url = getUrl(latitude, longitude, hospital);
+                    dataTransfer[0] = mMap;
+                    dataTransfer[1] = url;
+
+                    getNearbyPlacesData.execute(dataTransfer);
+                    Toast.makeText(MapsTest.this, "Showing Nearby Hospitals", Toast.LENGTH_SHORT).show();
+                    break;
+
+
+                case "s":
+                    mMap.clear();
+                    String school = "school";
+                    url = getUrl(latitude, longitude, school);
+                    dataTransfer[0] = mMap;
+                    dataTransfer[1] = url;
+
+                    getNearbyPlacesData.execute(dataTransfer);
+                    Toast.makeText(MapsTest.this, "Showing Nearby Schools", Toast.LENGTH_SHORT).show();
+                    break;
+                case "r":
+                    mMap.clear();
+                    String restaurant = "restaurant";
+                    url = getUrl(latitude, longitude, restaurant);
+                    dataTransfer[0] = mMap;
+                    dataTransfer[1] = url;
+
+                    getNearbyPlacesData.execute(dataTransfer);
+                    Toast.makeText(MapsTest.this, "Showing Nearby Restaurants", Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    try {
+                        addressList = geocoder.getFromLocationName(location, 5);
+
+                        if (addressList != null) {
+                            for (int i = 0; i < addressList.size(); i++) {
+                                LatLng latLng = new LatLng(addressList.get(i).getLatitude(), addressList.get(i).getLongitude());
+                                MarkerOptions markerOptions = new MarkerOptions();
+                                markerOptions.position(latLng);
+                                markerOptions.title(location);
+                                mMap.addMarker(markerOptions);
+                                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                                mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
+                            }
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+            }
+        }
+/*
         try {
             addressList = geocoder.getFromLocationName(location, 5);
 
@@ -146,7 +203,7 @@ public class MapsTest extends FragmentActivity implements OnMapReadyCallback,
                     markerOptions.title(location);
                     mMap.addMarker(markerOptions);
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                    mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
                 }
             }
         } catch (IOException e) {
@@ -251,7 +308,7 @@ public class MapsTest extends FragmentActivity implements OnMapReadyCallback,
         googlePlaceUrl.append("&radius="+PROXIMITY_RADIUS);
         googlePlaceUrl.append("&type="+nearbyPlace);
         googlePlaceUrl.append("&sensor=true");
-        googlePlaceUrl.append("&key="+"AIzaSyDe6X5nfHKIe-Wbg9QlpQW1UQXQEnEUTmQ");
+        googlePlaceUrl.append("&key="+"AIzaSyCyz9K9W9NTpoWt0a7lmHE3im5lwKt9JVw");
 
         Log.d("MapsActivity", "url = "+googlePlaceUrl.toString());
 
