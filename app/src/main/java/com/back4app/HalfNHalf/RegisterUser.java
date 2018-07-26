@@ -23,15 +23,19 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
 import java.util.Arrays;
@@ -163,7 +167,41 @@ public class RegisterUser extends Activity {
             user.setUsername(usernamestr);
             user.setPassword(passwordstr);
             user.setEmail(emailstr);
+            profile.saveInBackground(new SaveCallback() {
+                                         @Override
+                                         public void done(ParseException e) {
+                                             if (progressDialog.isShowing())
+                                                 progressDialog.dismiss();
+                                             if (e == null) {
+                                                 ParseQuery<ParseObject> query = ParseQuery.getQuery("Product");
+                                                 query.orderByDescending("updatedAt");
+                                                 query.getFirstInBackground(new GetCallback<ParseObject>() {
+                                                     public void done(ParseObject object, ParseException e) {
 
+                                                         if (object == null) {
+                                                             Log.d("product", "The getFirst request failed.");
+                                                         } else {
+                                                             Intent i = new Intent(RegisterUser.this, Profile.class);
+                                                             i.putExtra("email", object.getString("email"));
+                                                             i.putExtra("username", object.getString("username"));
+                                                             startActivity(i);
+                                                             finish();
+                                                         }
+                                                     }
+                                                 });
+
+
+                                                 Toast.makeText(RegisterUser.this, "Profile Has been Submitted.", Toast.LENGTH_LONG).show();
+                                             } else if (e.getCode() == ParseException.CONNECTION_FAILED) {
+                                                 Toast.makeText(RegisterUser.this, "No internet Connection please check your connection!",
+                                                         Toast.LENGTH_LONG).show();
+
+                                             } else {
+                                                 Toast.makeText(RegisterUser.this, "Error:" + e.getMessage(),
+                                                         Toast.LENGTH_LONG).show();
+                                             }
+                                         }
+                                     });
             user.signUpInBackground(new SignUpCallback() {
                 @Override
                 public void done(ParseException e) {

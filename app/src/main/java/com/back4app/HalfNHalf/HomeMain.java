@@ -29,21 +29,20 @@ import java.util.List;
 
 public class HomeMain extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+    public Profile UserProfile = new Profile();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        serverQuery();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                launchActivity("MapTest");
-                //serverQuery();
+                //launchActivity("MapTest");
                 /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
             }
@@ -62,13 +61,14 @@ public class HomeMain extends AppCompatActivity
 
     private void serverQuery()
     {
-        ParseQuery<Profile> query = ParseQuery.getQuery(Profile.class);
+        ParseQuery<Profile> query = ParseQuery.getQuery("Profile");
         query.orderByAscending("createdAt");
         query.findInBackground(new FindCallback<Profile>() {
             @Override
             public void done(List<Profile> list, @Nullable ParseException e) {
                 if (e == null){
-                    alertDisplayer("", "");
+                    UserProfile = list.get(0);
+                    alertDisplayer("", UserProfile.getEmail());
                 }else if(checkConnection()){
                     alertDisplayer("Error", "Network issues :P");
                 }

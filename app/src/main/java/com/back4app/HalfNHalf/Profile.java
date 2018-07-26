@@ -6,26 +6,20 @@ import com.parse.ParseObject;
 
 @ParseClassName("Profile")
 public class Profile extends ParseObject {
-    private String email = null;
-    private String username = null;
 
-    public void setEmail(String str)
-    {
+    public void setEmail(String str){
         put("email", str);
     }
 
-    public String getEmail()
-    {
+    public String getEmail(){
         return getString("email");
     }
 
-    public void setUsername(String str)
-    {
+    public void setUsername(String str){
         put("username", str);
     }
 
-    public String getUsername()
-    {
+    public String getUsername(){
         return getString("username");
     }
 }
