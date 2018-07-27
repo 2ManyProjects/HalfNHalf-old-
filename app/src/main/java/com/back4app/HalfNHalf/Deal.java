@@ -18,10 +18,10 @@ public class Deal extends ParseObject {
     public double getRate(){
        return getDouble("rate");
     }
-    public String getWarning(String str){
+    public String getWarning(){
         return getString("Warning");
     }
-    public int getAmount(int amnt){
+    public int getAmount(){
         return getInt("Quantity");
     }
 }

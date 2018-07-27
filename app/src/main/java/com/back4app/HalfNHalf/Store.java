@@ -1,13 +1,15 @@
 package com.back4app.HalfNHalf;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 
 @ParseClassName("Store")
 public class Store extends ParseObject {
-    public ArrayList<Deal> storeDeals = new ArrayList();
+    public List<Deal> storeDeals = new ArrayList();
 
     public void setID(String str)
     {

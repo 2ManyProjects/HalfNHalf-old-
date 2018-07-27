@@ -71,6 +71,8 @@ public class HomeMain extends AppCompatActivity
                     list.get(0).addStore("TEST STORE");
                     list.get(0).storeList.get(0).addDeal(0.5, "Not on Smartwatches", 4);
                     alertDisplayer("", UserProfile.getEmail());
+                    alertDisplayer("", list.get(0).storeList.get(0).getID());
+                    alertDisplayer("", list.get(0).storeList.get(0).storeDeals.get(0).getRate() + " " + list.get(0).storeList.get(0).storeDeals.get(0).getAmount() + " " + list.get(0).storeList.get(0).storeDeals.get(0).getWarning());
                 }else if(checkConnection()){
                     alertDisplayer("Error", "Network issues :P");
                 }

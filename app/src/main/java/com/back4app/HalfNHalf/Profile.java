@@ -7,11 +7,12 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @ParseClassName("Profile")
 public class Profile extends ParseObject {
 
-    public ArrayList<Store> storeList = new ArrayList();
+    public List<Store> storeList = new ArrayList();
 
     public boolean addStore(String ID) {
         if (storeList.size() == 0) {
