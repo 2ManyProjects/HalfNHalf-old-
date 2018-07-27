@@ -5,6 +5,7 @@ import com.parse.ParseObject;
 
 @ParseClassName("Deal")
 public class Deal extends ParseObject {
+    private double rate;
 
     public void setRate(double disc){
         put("rate", disc);
