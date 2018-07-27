@@ -11,6 +11,8 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         ParseObject.registerSubclass(Profile.class);
+        ParseObject.registerSubclass(Store.class);
+        ParseObject.registerSubclass(Deal.class);
         Parse.initialize(this);
     }
 }

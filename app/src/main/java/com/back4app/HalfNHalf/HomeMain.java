@@ -68,6 +68,8 @@ public class HomeMain extends AppCompatActivity
             public void done(List<Profile> list, @Nullable ParseException e) {
                 if (e == null){
                     UserProfile = list.get(0);
+                    list.get(0).addStore("TEST STORE");
+                    list.get(0).storeList.get(0).addDeal(0.5, "Not on Smartwatches", 4);
                     alertDisplayer("", UserProfile.getEmail());
                 }else if(checkConnection()){
                     alertDisplayer("Error", "Network issues :P");
