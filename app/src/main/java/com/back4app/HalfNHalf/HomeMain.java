@@ -21,7 +21,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -29,7 +31,7 @@ import java.util.List;
 
 public class HomeMain extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    public Profile UserProfile = new Profile();
+    public Profile UserProfile = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +64,7 @@ public class HomeMain extends AppCompatActivity
     private void serverQuery()
     {
         ParseQuery<Profile> query = ParseQuery.getQuery("Profile");
-        query.orderByAscending("createdAt");
+        //query.orderByAscending("createdAt");
         query.findInBackground(new FindCallback<Profile>() {
             @Override
             public void done(List<Profile> list, @Nullable ParseException e) {
@@ -79,6 +81,27 @@ public class HomeMain extends AppCompatActivity
             }
         });
     }
+
+/*
+    private void serverQuery()
+    {
+        ParseQuery<Profile> query = ParseQuery.getQuery("Profile");
+        //query.orderByAscending("createdAt");
+        query.getInBackground("userProfile", new GetCallback<Profile>() {
+            public void done(Profile profile, @Nullable ParseException e) {
+                if (e == null){
+                    UserProfile = profile;
+                    UserProfile.addStore("TEST STORE");
+                    UserProfile.storeList.get(0).addDeal(0.5, "Not on Smartwatches", 4);
+                    alertDisplayer(UserProfile.getEmail(), UserProfile.getUsername());
+                    alertDisplayer(UserProfile.storeList.get(0).getID(), UserProfile.storeList.get(0).storeDeals.get(0).getRate() + " " + UserProfile.storeList.get(0).storeDeals.get(0).getAmount() + " " + UserProfile.storeList.get(0).storeDeals.get(0).getWarning());
+                }else if(checkConnection()){
+                    alertDisplayer("Error", "Network issues :P");
+                }
+            }
+        });
+    }*/
+
 
     public boolean checkConnection(){   //method for checking network connection
         ConnectivityManager cm =

@@ -173,17 +173,17 @@ public class RegisterUser extends Activity {
                                              if (progressDialog.isShowing())
                                                  progressDialog.dismiss();
                                              if (e == null) {
-                                                 ParseQuery<ParseObject> query = ParseQuery.getQuery("Product");
+                                                 ParseQuery<ParseObject> query = ParseQuery.getQuery("Profile");
                                                  query.orderByDescending("updatedAt");
                                                  query.getFirstInBackground(new GetCallback<ParseObject>() {
                                                      public void done(ParseObject object, ParseException e) {
 
                                                          if (object == null) {
-                                                             Log.d("product", "The getFirst request failed.");
+                                                             Log.d("profile", "The getFirst request failed.");
                                                          } else {
                                                              Intent i = new Intent(RegisterUser.this, Profile.class);
-                                                             i.putExtra("email", object.getString("email"));
-                                                             i.putExtra("username", object.getString("username"));
+                                                             i.putExtra("userProfile", object);
+                                                             //i.putExtra("username", object.getString("username"));
                                                              startActivity(i);
                                                              finish();
                                                          }

@@ -10,15 +10,14 @@ import com.parse.ParseObject;
 @ParseClassName("Store")
 public class Store extends ParseObject {
     public List<Deal> storeDeals = new ArrayList();
+    private String ID;
 
-    public void setID(String str)
-    {
-        put("ID", str);
+    public void setID(String str) {
+        ID = str;
     }
 
-    public String getID()
-    {
-        return getString("ID");
+    public String getID() {
+        return ID;
     }
 
     public void addDeal(double rate, String Warning, int amount) {

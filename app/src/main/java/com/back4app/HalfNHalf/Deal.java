@@ -6,23 +6,25 @@ import com.parse.ParseObject;
 @ParseClassName("Deal")
 public class Deal extends ParseObject {
     private double rate;
+    private String Warning;
+    private int Amount;
 
     public void setRate(double disc){
-        put("rate", disc);
+        rate = disc;
     }
     public void setWarning(String str){
-        put("Warning", str);
+        Warning = str;
     }
     public void setAmount(int amnt){
-        put("Quantity", amnt);
+        Amount = amnt;
     }
     public double getRate(){
-       return getDouble("rate");
+       return rate;
     }
     public String getWarning(){
-        return getString("Warning");
+        return Warning;
     }
     public int getAmount(){
-        return getInt("Quantity");
+        return Amount;
     }
 }
