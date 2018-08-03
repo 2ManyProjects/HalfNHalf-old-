@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -121,7 +122,7 @@ public class RegisterUser extends Activity {
                 intent = new Intent(this, MapsTest.class);
                 startActivity(intent);
                 break;
-            default: alertDisplayer("Missing Activity", "Activity not found");
+            default: Displayer.alertDisplayer("Missing Activity", "Activity not found", getApplicationContext());
                 break;
         }
     }
@@ -134,7 +135,6 @@ public class RegisterUser extends Activity {
         String emailstr = email.getText().toString();
         String usernamestr = username.getText().toString();
         String passwordstr = password.getText().toString();
-
         boolean cancel = false;
         View focusView = null;
         // Check for a valid password, if the user entered one.
@@ -161,79 +161,33 @@ public class RegisterUser extends Activity {
             focusView.requestFocus();
         } else {
             ParseUser user = new ParseUser();
-            Profile profile = new Profile();
-            profile.setEmail(emailstr);
-            profile.setUsername(usernamestr);
             user.setUsername(usernamestr);
             user.setPassword(passwordstr);
             user.setEmail(emailstr);
-            profile.saveInBackground(new SaveCallback() {
-                                         @Override
-                                         public void done(ParseException e) {
-                                             if (progressDialog.isShowing())
-                                                 progressDialog.dismiss();
-                                             if (e == null) {
-                                                 ParseQuery<ParseObject> query = ParseQuery.getQuery("Profile");
-                                                 query.orderByDescending("updatedAt");
-                                                 query.getFirstInBackground(new GetCallback<ParseObject>() {
-                                                     public void done(ParseObject object, ParseException e) {
+            try{
+                user.signUp();
+            }catch(ParseException e){
+                Displayer.toaster("Issue with User regestration: " + e.getMessage(), "1", getApplicationContext());
+                finish();
+            }
+            try {
+                Profile settings = new Profile();
+                settings.setEmail(emailstr);
+                settings.setUsername(usernamestr);
+                settings.save();
+                ParseFile profile = new ParseFile((usernamestr + "#" + emailstr + "#").getBytes());
+                profile.save();
+                user.put("userFile", profile);
+                user.put("ProfileID", settings.getObjectId());
+                Displayer.toaster("ID: " + settings.getObjectId(), "5", getApplicationContext());
+                user.save();
+            }catch(ParseException e){
+                Displayer.toaster("Issue with Profile regestration: " + e.getMessage(), "5", getApplicationContext());
+            }
 
-                                                         if (object == null) {
-                                                             Log.d("profile", "The getFirst request failed.");
-                                                         } else {
-                                                             Intent i = new Intent(RegisterUser.this, Profile.class);
-                                                             i.putExtra("userProfile", object);
-                                                             //i.putExtra("username", object.getString("username"));
-                                                             startActivity(i);
-                                                             finish();
-                                                         }
-                                                     }
-                                                 });
-
-
-                                                 Toast.makeText(RegisterUser.this, "Profile Has been Submitted.", Toast.LENGTH_LONG).show();
-                                             } else if (e.getCode() == ParseException.CONNECTION_FAILED) {
-                                                 Toast.makeText(RegisterUser.this, "No internet Connection please check your connection!",
-                                                         Toast.LENGTH_LONG).show();
-
-                                             } else {
-                                                 Toast.makeText(RegisterUser.this, "Error:" + e.getMessage(),
-                                                         Toast.LENGTH_LONG).show();
-                                             }
-                                         }
-                                     });
-            user.signUpInBackground(new SignUpCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e == null) {
-                        final String title = "Account Created Successfully!";
-                        final String message = "Please verify your email before Login";
-
-                        alertDisplayer(title, message);
-                    } else {
-                        final String title = "Error Account Creation failed";
-                        final String message = "Account could not be created";
-
-                        alertDisplayer(title, message + " :" + e.getMessage());
-                    }
-                }
-            });
-            //finish();
+            //Displayer.toaster("Signup Successful", "5", getApplicationContext());
+            finish();
         }
-    }
-
-    void alertDisplayer(String title, String message){
-        AlertDialog.Builder builder = new AlertDialog.Builder(RegisterUser.this)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog ok = builder.create();
-        ok.show();
     }
 
     boolean isEmailValid(CharSequence email) {
@@ -241,6 +195,9 @@ public class RegisterUser extends Activity {
     }
 
     private boolean isPasswordValid(String newPassword) {
+        //TODO: REMOVE THIS
+        if(newPassword.equals("test"))
+            return true;
         if(newPassword.length() >= 12)
             return true;
         return newPassword.length()>= 6 && isValidPass(newPassword);

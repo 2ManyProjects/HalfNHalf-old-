@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,7 +23,9 @@ import android.view.MenuItem;
 
 import com.parse.FindCallback;
 import com.parse.GetCallback;
+import com.parse.GetDataCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -31,7 +34,8 @@ import java.util.List;
 
 public class HomeMain extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    public Profile UserProfile = null;
+    public Profile UserProfile = new Profile();
+    public ParseUser mainUser = ParseUser.getCurrentUser();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +47,8 @@ public class HomeMain extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Displayer.toaster("File Stream: " + UserProfile.getFileStream(), "5", getApplicationContext());
 
                 //launchActivity("MapTest");
                 /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -63,24 +69,40 @@ public class HomeMain extends AppCompatActivity
 
     private void serverQuery()
     {
-        ParseQuery<Profile> query = ParseQuery.getQuery("Profile");
-        //query.orderByAscending("createdAt");
-        query.findInBackground(new FindCallback<Profile>() {
-            @Override
-            public void done(List<Profile> list, @Nullable ParseException e) {
-                if (e == null){
-                    UserProfile = list.get(0);
-                    list.get(0).addStore("TEST STORE");
-                    list.get(0).storeList.get(0).addDeal(0.5, "Not on Smartwatches", 4);
-                    alertDisplayer("", UserProfile.getEmail());
-                    alertDisplayer("", list.get(0).storeList.get(0).getID());
-                    alertDisplayer("", list.get(0).storeList.get(0).storeDeals.get(0).getRate() + " " + list.get(0).storeList.get(0).storeDeals.get(0).getAmount() + " " + list.get(0).storeList.get(0).storeDeals.get(0).getWarning());
-                }else if(checkConnection()){
-                    alertDisplayer("Error", "Network issues :P");
+        ParseFile temp = (ParseFile)mainUser.get("userFile");
+        temp.getDataInBackground(new GetDataCallback() {
+            public void done(byte[] data, @Nullable ParseException e) {
+                if (e == null) {
+                    UserProfile.init(data, getApplicationContext());
+                } else {
+                    Displayer.toaster("ErrorData: " + e.getMessage(), "5", getApplicationContext());
                 }
             }
         });
+//        Displayer.toaster("FileData: " + UserProfile.fileStream, "5", getApplicationContext());
+//        ParseQuery<ParseObject> query = ParseQuery.getQuery("Profile");
+//        query.orderByAscending("createdAt");
+//        query.getInBackground(ParseUser.getCurrentUser().getString("ProfileID"),new GetCallback<ParseObject>() {
+//            public void done(ParseObject object, @Nullable ParseException e) {
+//                if (e == null){
+//                    UserProfile.setEmail(object.getString("email"));
+//                    UserProfile.init();
+//                    Displayer.alertDisplayer("Store Response: ", UserProfile.addStore("TEST STORE"), getApplicationContext());
+//                    //UserProfile.storeList.get(0).addDeal(0.5, "Not on Smartwatches", 4, UserProfile.getInt("storenum"));
+//                    Displayer.alertDisplayer("", UserProfile.getEmail() + " " + ParseUser.getCurrentUser().getString("email") + " Stuff: " + UserProfile.getString("stuff"), getApplicationContext());
+//                    //Displayer.alertDisplayer("", UserProfile.storeList.get(0).getID(), getApplicationContext());
+//                    //Displayer.alertDisplayer("", UserProfile.storeList.get(0).storeDeals.get(0).getRate() + " " + UserProfile.storeList.get(0).storeDeals.get(0).getAmount() + " " + UserProfile.storeList.get(0).storeDeals.get(0).getWarning(), getApplicationContext());
+//                    UserProfile.saveInBackground();
+//                }else if(checkConnection()){
+//                    Displayer.alertDisplayer("Error", e.getMessage(), getApplicationContext());
+//                }
+//            }
+//        });
     }
+
+
+
+
 
 /*
     private void serverQuery()
@@ -141,24 +163,11 @@ public class HomeMain extends AppCompatActivity
                 intent = new Intent(this, MapsTest.class);
                 startActivity(intent);
                 break;
-            default: alertDisplayer("Missing Activity", "Activity not found");
+            default: Displayer.alertDisplayer("Missing Activity", "Activity not found", getApplicationContext());
                 break;
         }
     }
 
-    void alertDisplayer(String title, String message){
-        AlertDialog.Builder builder = new AlertDialog.Builder(HomeMain.this)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog ok = builder.create();
-        ok.show();
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

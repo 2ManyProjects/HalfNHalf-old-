@@ -11,28 +11,32 @@ import com.parse.ParseObject;
 public class Store extends ParseObject {
     public List<Deal> storeDeals = new ArrayList();
     private String ID;
+    private int dealNum = 0;
 
     public void setID(String str) {
         ID = str;
+        put(ID, dealNum);
     }
 
     public String getID() {
         return ID;
     }
 
-    public void addDeal(double rate, String Warning, int amount) {
+    public void addDeal(double rate, String Warning, int amount, int storenum) {
+        dealNum += 1;
+        put(ID, dealNum);
         Deal temp = new Deal();
-        temp.setRate(rate);
-        temp.setWarning(Warning);
-        temp.setAmount(amount);
+        temp.setRate(rate, ID);
+        temp.setWarning(Warning, ID);
+        temp.setAmount(amount, ID);
         storeDeals.add(temp);
     }
 
     public void changeDeal(int index, double rate, String Warning, int amount ) {
         Deal temp = storeDeals.get(index);
-        temp.setRate(rate);
-        temp.setWarning(Warning);
-        temp.setAmount(amount);
+        temp.setRate(rate, ID);
+        temp.setWarning(Warning, ID);
+        temp.setAmount(amount, ID);
         storeDeals.set(index, temp);
     }
 

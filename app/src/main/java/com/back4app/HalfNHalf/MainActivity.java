@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Parse.initialize(this);
+        ParseUser.getCurrentUser().logOut();
         setContentView(R.layout.activity_main);
         ParseUser user = new ParseUser();
         progressDialog = new ProgressDialog(MainActivity.this);
@@ -130,25 +131,12 @@ public class MainActivity extends AppCompatActivity {
                 intent = new Intent(this, MapsTest.class);
                 startActivity(intent);
             break;
-            default: alertDisplayer("Missing Activity", "Activity not found");
+            default: Displayer.alertDisplayer("Missing Activity", "Activity not found", getApplicationContext());
             break;
         }
     }
 
 
-    void alertDisplayer(String title, String message){
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog ok = builder.create();
-        ok.show();
-    }
     public String getUsername()
     {
         return username.getText().toString();
@@ -162,15 +150,15 @@ public class MainActivity extends AppCompatActivity {
                     if(parseUser.getBoolean("emailVerified")) {
                         //getUserDetailFromParse();
                         launchActivity("Home");
-                        alertDisplayer("Login success", "");
+                        Displayer.alertDisplayer("Login success", "", getApplicationContext());
                     }
                     else {
                         parseUser.logOut();
-                        alertDisplayer("Login Fail", "Please Verify Your Email first");
+                        Displayer.alertDisplayer("Login Fail", "Please Verify Your Email first", getApplicationContext());
                     }
                 } else {
                     progressDialog.dismiss();
-                    alertDisplayer("Login fail", e.getMessage()+ "Please retry");
+                    Displayer.alertDisplayer("Login fail", e.getMessage()+ "Please retry", getApplicationContext());
                 }
             }
         });
